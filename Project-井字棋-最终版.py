@@ -1,10 +1,11 @@
+# coding : utf-8
 # This programe is used for playing a chess game.
-# Coder:jingfelix
-# updatetime :2020.10.22
+# Coder : jingfelix
+# updatetime : 2020.10.22
 # dct = {11: -1, 12: -1, 13: 0, 22: 0, 21: 0, 23: 0, 31: 0, 32: 0, 33: 0}
 
+# 导入模块用于关闭程序
 import sys
-
 
 # 打印棋盘的函数
 def printbd(d):
@@ -70,53 +71,53 @@ def main(d):
 
     for line in line_all_1:
 
-        line_sum = sum(list(line.values()))
+        line_sum = sum(list(line.values()))  # 求每一行/列的位置算术和
 
-        if line_sum == 2:
+        if line_sum == 2:  # 和为2，即其中有两个为电脑放置的棋子，一个为空
             change_key_list = get_keys(line, 0)
-            d[change_key_list[0]] = 1
+            d[change_key_list[0]] = 1  # 直接选取空的位置放置棋子
             print('Computer win!')
-            init()
+            init()  # 重新开始游戏
 
-        elif line_sum == -2:
-            ergent.append(line)
+        elif line_sum == -2:  # 和为-2，即有两个为玩家放置的棋子，另一个为空
+            ergent.append(line)  # 将这一列加入到ergent列表中，方便进行判断
             break
 
-        elif line_sum == -1:
-            change_key_list = get_keys(line, 0)
-            if len(change_key_list) == 2:
+        elif line_sum == -1:  # 两种情况，-2+1或-1+0+0
+            change_key_list = get_keys(line, 0)  # 求空位置的个数
+            if len(change_key_list) == 2:  # 如果有两个空位置
                 less_ergent.append(line)
 
-    if len(ergent) != 0:
+    if len(ergent) != 0:  # 必须要围堵的列
 
         change_key_list = get_keys(ergent[0], 0)
         d[change_key_list[0]] = 1
 
-    elif len(less_ergent) != 0:
-        keys = []
-        times = []
+    elif len(less_ergent) != 0:  # 没有必须围堵的列，但是有和为-1，空为2的列
+        keys = []  # 考察在less_ergent列表中出现2次及以上的列，这一类列需要优先处理
+        times = []  # 用于存储是否有出现次数大于等于2的位置
         for dictn in less_ergent:
             zero_list = get_keys(dictn, 0)
-            keys.extend(zero_list)
-        for key in keys:
-            if keys.count(key) > 2:
+            keys.extend(zero_list)  # extend方法用于在列表后添加一个序列的新元素
+        for key in keys:  # 上一步已经将所有less_ergent列中value为0的位置加入keys列表中
+            if keys.count(key) >= 2:  # 如果出现两次及以上，优先处理
                 d[key] = 1
                 times.append(key)
                 break
-        if times == []:
+        if times == []:  # 如果没有出现次数大于等于2的位置
             change_key_list = get_keys(less_ergent[0], 0)
             d[change_key_list[0]] = 1
 
     # change_key_list = get_keys(less_ergent[0], 0)
     # d[change_key_list[0]] = 1
 
-    else:
+    else:  # 其他情况：必定平局
         print('Fair game!')
         init()
 
     printbd(d)
     print('*' * 40)
-
+    # 更新棋盘
     line1 = {11: d[11], 21: d[21], 31: d[31]}
     line2 = {12: d[12], 22: d[22], 32: d[32]}
     line3 = {13: d[13], 23: d[23], 33: d[33]}
@@ -137,7 +138,7 @@ def init():
     print('Start a new game?')
     start_order = input('Input "yes" to start:')
     if start_order == 'yes':
-        fr = input('First hand or not?')
+        fr = input('First hand or not?')  # 玩家先手or后手
         if fr == 'yes':
             main(dct)
         else:
